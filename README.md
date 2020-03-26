@@ -8,6 +8,8 @@ and concepts of the book are included as Jupyter notebooks.
 Concepts and ideas are taken from the book which can be found here: 
 https://www.cambridge.org/core/books/computational-modeling-of-cognition-and-behavior/A4A90098E7CB9A58E5D030F408639D04
 
+
+
 Publisher: Cambridge University Press
 
 Online publication date: February 2018
