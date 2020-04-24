@@ -19,3 +19,5 @@ Print publication year: 2018
 Online ISBN: 9781316272503
 
 DOI: https://doi.org/10.1017/CBO9781316272503
+
+The original r code can be found here: https://github.com/psy-farrell/computational-modelling
