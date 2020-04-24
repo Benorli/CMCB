@@ -14,4 +14,4 @@ def random_walk(n_reps, n_samples, drift, sdrw):
     latencies = np.repeat(0, n_reps)
     responses = np.repeat(0, n_reps)
     evidence = np.zeros((n_reps, n_samples + 1))
-    map(sum, evidence)  # INCOMPLETE, sum is not correct function continue from here
+    map(sum, evidence)  # TODO, sum is not correct function continue from here
