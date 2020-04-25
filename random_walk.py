@@ -4,8 +4,10 @@ import numpy as np
 n_reps = 10000
 n_samples = 2000
 drift = 0
-sdrw = 0.3
+sdrw = 0.3  # standard deviation random walk
 criterion = 3
+
+# TODO consider adding an input for dataframe
 
 
 def random_walk(n_reps, n_samples, drift, sdrw):
@@ -14,4 +16,16 @@ def random_walk(n_reps, n_samples, drift, sdrw):
     latencies = np.repeat(0, n_reps)
     responses = np.repeat(0, n_reps)
     evidence = np.zeros((n_reps, n_samples + 1))
-    map(sum, evidence)  # TODO, sum is not correct function continue from here
+    # start unpacks generator (map output)
+    [*a] = map(lambda evi: foo(evi, n_samples, drift, sdrw), enumerate(evidence))  # TODO remove unnecessary enumerate
+    return a
+
+
+def foo(evi, n_samples, drift, sdrw):
+    idx, evidence = evi
+    evidence = np.cumsum(np.concatenate([np.zeros(1), np.random.normal(drift, sdrw, n_samples)]))
+    # TODO, p <− which ( abs (evidence[i ,])>criterion) [1] cross boundary
+    return evidence
+
+
+print(random_walk(n_reps, n_samples, drift, sdrw))
