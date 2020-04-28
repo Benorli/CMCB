@@ -17,15 +17,14 @@ def random_walk(n_reps, n_samples, drift, sdrw):
     responses = np.repeat(0, n_reps)
     evidence = np.zeros((n_reps, n_samples + 1))
     # start unpacks generator (map output)
-    [*a] = map(lambda evi: foo(evi, n_samples, drift, sdrw), enumerate(evidence))  # TODO remove unnecessary enumerate
+    [*a] = map(lambda evi: foo(evi, n_samples, drift, sdrw), evidence)
     return a
 
 
 def foo(evi, n_samples, drift, sdrw):
-    idx, evidence = evi
-    evidence = np.cumsum(np.concatenate([np.zeros(1), np.random.normal(drift, sdrw, n_samples)]))
+    evi = np.cumsum(np.concatenate([np.zeros(1), np.random.normal(drift, sdrw, n_samples)]))
     # TODO, p <− which ( abs (evidence[i ,])>criterion) [1] cross boundary
-    return evidence
+    return evi
 
 
 print(random_walk(n_reps, n_samples, drift, sdrw))
