@@ -13,7 +13,7 @@ criterion = 3
 def random_walk(n_reps, n_samples, drift, sdrw):
     """random walk model"""
 
-    latencies = np.repeat(0, n_reps)
+    latencies = np.repeat(0, n_reps)  # TODO: remove predefine, predefine not necessary with map
     responses = np.repeat(0, n_reps)
     evidence = np.zeros((n_reps, n_samples + 1))
     # start unpacks generator (map output)
