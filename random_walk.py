@@ -1,11 +1,6 @@
 import numpy as np
 
-# set example params
-n_reps = 10000
-n_samples = 2000
-drift = 0
-sdrw = 0.3  # standard deviation random walk
-criterion = 3
+# TODO consider adding an input for data frame (may not be relevant, could input array into df)
 
 # TODO consider adding an input for dataframe
 
@@ -29,5 +24,3 @@ def foo(trial_evidence, trial_response, trial_latency, n_samples, drift, sdrw):
     trial_response = np.sign(trial_evidence[trial_latency])
     return trial_evidence, trial_latency, trial_response
 
-
-print(random_walk(n_reps, n_samples, drift, sdrw))
