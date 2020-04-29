@@ -1,3 +1,10 @@
-import numpy as np
+import random_walk as rw
 
-print(np.linspace(1, 2, 3))
+# set example params
+n_reps = 10000
+n_samples = 2000
+drift = 0
+sd_rw = 0.3  # standard deviation random walk
+threshold = 3
+
+a = rw.random_walk(n_reps, n_samples, drift, sd_rw, threshold)
