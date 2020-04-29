@@ -2,7 +2,6 @@ import numpy as np
 
 # TODO consider adding an input for data frame (may not be relevant, could input array into df)
 
-# TODO consider adding an input for dataframe
 
 def random_walk(n_reps, n_samples, drift, sd_rw, threshold):
     """random walk model"""
