@@ -23,8 +23,7 @@ def foo(trial, n_samples, drift, sd_rw, threshold):
                                                           sd_rw,
                                                           n_samples)]))
     trial_latency = np.where(abs(trial) > threshold)
-    trial_latency = list(zip(trial_latency[0],
-                             trial_latency[1]))[0]  # TODO error at this line
+    trial_latency = trial_latency[0][1]
     trial_response = np.sign(trial[trial_latency])
     return trial, trial_latency, trial_response
 
