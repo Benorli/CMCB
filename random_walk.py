@@ -7,14 +7,18 @@ def random_walk(n_reps, n_samples, drift, sd_rw, threshold):
     """random walk model"""
 
     # star unpacks generator (map output)
-    [*a] = map(lambda trial: foo(trial,
-                                 n_samples,
-                                 drift,
-                                 sd_rw,
-                                 threshold),
-               np.zeros((n_reps,
-                         n_samples + 1)))
-    return a
+    [*list_trials] = map(lambda trial_evidence: simulate_trial(trial_evidence,
+                                                               n_samples,
+                                                               drift,
+                                                               sd_rw,
+                                                               threshold),
+                         np.zeros((n_reps,
+                                   n_samples + 1)))
+    evidence = list(map(lambda x: x[0], list_trials))
+    trial_latencies = list(map(lambda x: x[1], list_trials))
+    trial_responses = list(map(lambda x: x[2], list_trials))
+    print(evidence, trial_latencies, trial_responses)
+    return evidence, trial_latencies, trial_responses
 
 
 def foo(trial, n_samples, drift, sd_rw, threshold):
