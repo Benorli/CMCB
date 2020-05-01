@@ -22,6 +22,7 @@ def random_walk(n_reps, n_samples, drift, sd_rw, threshold):
 
 
 def simulate_trial(trial_evidence, n_samples, drift, sd_rw, threshold):
+    """simulate a single trial of the random walk model"""
     trial_evidence[:] = np.cumsum(np.concatenate([np.zeros(1),
                                                   np.random.normal(drift,
                                                                    sd_rw,
