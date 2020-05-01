@@ -17,7 +17,6 @@ def random_walk(n_reps, n_samples, drift, sd_rw, threshold):
     evidence = list(map(lambda x: x[0], list_trials))
     trial_latencies = list(map(lambda x: x[1], list_trials))
     trial_responses = list(map(lambda x: x[2], list_trials))
-    print(evidence, trial_latencies, trial_responses)
     return evidence, trial_latencies, trial_responses
 
 
