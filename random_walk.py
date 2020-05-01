@@ -21,12 +21,12 @@ def random_walk(n_reps, n_samples, drift, sd_rw, threshold):
     return evidence, trial_latencies, trial_responses
 
 
-def foo(trial, n_samples, drift, sd_rw, threshold):
-    trial[:] = np.cumsum(np.concatenate([np.zeros(1),
-                                         np.random.normal(drift,
-                                                          sd_rw,
-                                                          n_samples)]))
-    trial_latency = np.where(abs(trial) > threshold)
+def simulate_trial(trial_evidence, n_samples, drift, sd_rw, threshold):
+    trial_evidence[:] = np.cumsum(np.concatenate([np.zeros(1),
+                                                  np.random.normal(drift,
+                                                                   sd_rw,
+                                                                   n_samples)]))
+    trial_latency = np.where(abs(trial_evidence) > threshold)
     trial_latency = trial_latency[0][1]
     trial_response = np.sign(trial[trial_latency])
     return trial, trial_latency, trial_response
