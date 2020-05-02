@@ -5,7 +5,6 @@ import numpy as np
 
 def random_walk(n_reps, n_samples, drift, sd_rw, threshold):
     """random walk model"""
-
     # star unpacks generator (map output)
     [*list_trials] = map(lambda trial_evidence: simulate_trial(trial_evidence,
                                                                n_samples,
@@ -27,5 +26,6 @@ def simulate_trial(trial_evidence, n_samples, drift, sd_rw, threshold):
                                                                    sd_rw,
                                                                    n_samples)]))
     trial_latency = np.where(abs(trial_evidence) > threshold)
+    assert trial_latency[0].size, "No decision made, sd_rw too low or threshold too high"
     trial_response = np.sign(trial_evidence[trial_latency])
     return trial_evidence, trial_latency[0][1], trial_response
