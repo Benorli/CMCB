@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-# TODO consider adding an input for data frame (may not be relevant, could input array into df)
+# TODO, create as df?
+# TODO, np.vectorize > list comp > map > for, can this be implemented in a SIMPLE replicable way for diff models?
 
 
 def random_walk(n_reps, n_samples, drift, sd_rw, threshold):
@@ -28,7 +29,7 @@ def simulate_trial(trial_evidence, n_samples, drift, sd_rw, threshold):
                                                   np.random.normal(drift,
                                                                    sd_rw,
                                                                    n_samples)]))
-    trial_latency = np.where(abs(trial_evidence) > threshold)
+    trial_latency = np.where(abs(trial_evidence) > threshold)  # TODO: Clear values following the threshold
     assert trial_latency[0].size, "No decision made, sd_rw too low or threshold too high"
     trial_response = np.sign(trial_evidence[trial_latency])
     return trial_evidence, trial_latency[0][1], trial_response[0]
