@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 # TODO consider adding an input for data frame (may not be relevant, could input array into df)
 
@@ -13,10 +14,12 @@ def random_walk(n_reps, n_samples, drift, sd_rw, threshold):
                                                                threshold),
                          np.zeros((n_reps,
                                    n_samples + 1)))
-    evidence = list(map(lambda x: x[0], list_trials))
-    trial_latencies = list(map(lambda x: x[1], list_trials))
-    trial_responses = list(map(lambda x: x[2], list_trials))
-    return evidence, trial_latencies, trial_responses
+    rw_df = pd.DataFrame(data=list_trials,
+                         columns=['evidence_accumulation',
+                                  'trial_latencies',
+                                  'trial_responses'])
+    rw_df.index.name = 'trial'
+    return rw_df
 
 
 def simulate_trial(trial_evidence, n_samples, drift, sd_rw, threshold):
