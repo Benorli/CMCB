@@ -31,4 +31,4 @@ def simulate_trial(trial_evidence, n_samples, drift, sd_rw, threshold):
     trial_latency = np.where(abs(trial_evidence) > threshold)
     assert trial_latency[0].size, "No decision made, sd_rw too low or threshold too high"
     trial_response = np.sign(trial_evidence[trial_latency])
-    return trial_evidence, trial_latency[0][1], trial_response
+    return trial_evidence, trial_latency[0][1], trial_response[0]
