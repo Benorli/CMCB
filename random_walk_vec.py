@@ -13,3 +13,4 @@ def random_walk_vec(n_reps, n_samples, drift, sd_rw, threshold):
     # TODO: Next np.which
     # TODO: Use where to apply function depending on value
     # TODO: numpy.put to replace values above threshold
+    # TODO: which may require apply along axis (could include put here too)
