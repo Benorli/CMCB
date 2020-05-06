@@ -1,4 +1,4 @@
-import random_walk as rw
+import random_walk_vec as rw
 
 # TODO, plotting with sns
 
@@ -9,11 +9,11 @@ drift = 0
 sd_rw = 0.3  # standard deviation random walk
 threshold = 3
 
-rw_df = rw.random_walk(n_reps,
-                       n_samples,
-                       drift,
-                       sd_rw,
-                       threshold)
+rw_df = rw.random_walk_vec(n_reps,
+                           n_samples,
+                           drift,
+                           sd_rw,
+                           threshold)
 
 
 
