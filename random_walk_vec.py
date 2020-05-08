@@ -38,22 +38,12 @@ def random_walk_vec(n_reps, n_samples, drift, sd_rw, threshold):
     the crossing values. Note that the size of the array is n_reps.
     """
 
-    # TODO: (jguzman) do not accumulate object methods, it's confusing
-    evidence = np.random.normal(0,
-                                0.3,
-                                [n_reps, n_samples]).cumsum(axis=1)
-
-    # TODO: (jguzman) two objects with the same name is confusing
-    evidence = np.concatenate((np.zeros((n_reps, 1)), evidence),
+    evidence = np.concatenate((np.zeros((nreps, 1)),
+                               np.random.normal(loc=drift,
+                                                scale=sd_rw,
+                                                size=[nreps, nsamples])),
                               axis=1)
-
-    # TODO: (jguzman) lambdas better be defined alone
-    trial_latency = np.apply_along_axis(lambda x: np.where(x > threshold)[0][0], 1, np.abs(evidence))  # best solution for my purpose
-
-    # QUESTION: how can I do this when evidence sometimes doesn't contain value I look for with where?
-
-    # trial_latency = np.apply_along_axis(lambda x: np.where(x > threshold)[0][0], 1, evidence) ERROR
-    # trial_latency = np.apply_along_axis(lambda x: np.where(x > threshold)[0], 1, evidence) ERROR
+    evidence[:] = evidence.cumsum(axis=1)
 
     # trial_latency = np.apply_along_axis(np.argmax, 1, evidence > threshold) gives this error:
     # https://stackoverflow.com/questions/45765476/why-does-numpy-argmax-for-a-list-of-all-false-bools-yield-zero/45765513
