@@ -14,28 +14,33 @@ import numpy as np
 import pandas as pd
 
 
-# (jguzman) drift, sd_rw are not used, if param>3 use a dictionary
-def random_walk_vec(n_reps, n_samples, drift, sd_rw, threshold):
+# TODO: (jguzman) if param>3 use a dictionary
+def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
     """ vectorized random walk model with np
 
     Parameters
     ----------
-    n_reps : int
+    nreps : int
         number of normal distributions generated
 
-    n_samples : int
+    nsamples : int
         the number of samples drawn from a normal distribution
 
-    drift : float 
+    drift : float
+        The initial evidence
 
     sd_rw : float
+        The standard deviation of a random normal distribution
+        which defines the step in evidence made at each time
+        point
 
     threshold : float
+        The value of evidence at which a decision is made.
     
     Returns
     -------
-    A 1D NumPy array with the latency (in number of samples) of 
-    the crossing values. Note that the size of the array is n_reps.
+    A DataFrame containing three columns, evidence, trial_latency,
+    and trial_response. Note that the length of columns is n_reps.
     """
 
     evidence = np.concatenate((np.zeros((nreps, 1)),
@@ -55,6 +60,7 @@ def random_walk_vec(n_reps, n_samples, drift, sd_rw, threshold):
                                         'trial_response': trial_response})
     return df_random_walk
 
+    # TODO: Finish and plot intention for clarity
     # TODO: numpy.put to replace values above threshold
 
 
@@ -85,7 +91,7 @@ def get_latencies(n_reps, n_samples, threshold):
     the crossing values. Note that the size of the array is n_reps.
     """
     mysize = (n_reps, n_samples)
-    mynorm = np.random.normal(loc = 0, scale = 0.3, size = mysize)
+    mynorm = np.random.normal(loc=0, scale=0.3, size=mysize)
 
     rows, cols = np.where(mynorm>threshold) # returns rows, cols
 
@@ -95,6 +101,7 @@ def get_latencies(n_reps, n_samples, threshold):
     mylatency = cols[:n_reps] # we take up to the number of reps
 
     return mylatency
+
 
 if __name__ == '__main__':
     # just for testing run the script with :
