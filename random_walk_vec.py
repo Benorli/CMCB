@@ -45,16 +45,19 @@ def random_walk_vec(n_reps, n_samples, drift, sd_rw, threshold):
                               axis=1)
     evidence[:] = evidence.cumsum(axis=1)
 
-    # trial_latency = np.apply_along_axis(np.argmax, 1, evidence > threshold) gives this error:
-    # https://stackoverflow.com/questions/45765476/why-does-numpy-argmax-for-a-list-of-all-false-bools-yield-zero/45765513
-    # concatenated zeros prevent this at least
-
+    trial_latency = np.apply_along_axis(func1d=where_first,
+                                        axis=1,
+                                        arr=np.abs(evidence) > threshold)
     trial_response = np.sign(evidence[:, trial_latency])
 
     # I will then put these into a dataframe and return them...
 
     # TODO: numpy.put to replace values above threshold
-    # TODO: (jguzman) where is the return value of this function????
+
+
+def where_first(x):
+    return np.where(x)[0][0]
+
 
 def get_latencies(n_reps, n_samples, threshold):
     """ 
