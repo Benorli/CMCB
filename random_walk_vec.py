@@ -11,7 +11,7 @@ random distributions and analyze its effects.
 """
 
 import numpy as np
-#import pandas as pd (jguzman) if don't use, we don't import
+import pandas as pd
 
 
 # (jguzman) drift, sd_rw are not used, if param>3 use a dictionary
@@ -50,7 +50,10 @@ def random_walk_vec(n_reps, n_samples, drift, sd_rw, threshold):
                                         arr=np.abs(evidence) > threshold)
     trial_response = np.sign(evidence[:, trial_latency])
 
-    # I will then put these into a dataframe and return them...
+    df_random_walk = pd.DataFrame(data={'evidence': evidence,
+                                        'trial_latency': trial_latency,
+                                        'trial_response': trial_response})
+    return df_random_walk
 
     # TODO: numpy.put to replace values above threshold
 
