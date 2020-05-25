@@ -84,7 +84,11 @@ def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
 
 
 def where_first(x):
-    return np.where(x)[0][0]
+    try:
+        first_idx = np.where(x)[0][0]
+    except IndexError:
+        first_idx = -1
+    return first_idx
 
 
 def plot_random_walk(df_random_walk, trials):
