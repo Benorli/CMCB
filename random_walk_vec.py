@@ -142,13 +142,11 @@ if __name__ == '__main__':
     sd_rw = 0.3  # standard deviation random walk
     threshold = 3
 
-    ax[0].set_ylabel('Cumulative distribution')
-    ax[1].hist(mylat, bins = np.arange(0,200, 5))
-    ax[1].set_ylabel('Number of ocurrences')
-    ax[1].set_xlabel('Latency (in sampling points)')
-
-
-    fig.show()
-
-
+    df_rw = random_walk_vec(n_reps,
+                            n_samples,
+                            drift,
+                            sd_rw,
+                            threshold)
+    plot_random_walk(df_rw, np.arange(5))
+    plt.show()
 
