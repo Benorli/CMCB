@@ -72,7 +72,9 @@ def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
     # TODO: when taking min, -1 is copied, need to deal with this
     # TODO: array is modified inplace! be careful! Should copy
 
-    df_random_walk = pd.DataFrame(data={'evidence': evidence,
+    trial_response = np.sign(evidence[:, trial_latency])[:, 0]
+
+    df_random_walk = pd.DataFrame(data={'evidence': list(evidence),
                                         'trial_latency': trial_latency,
                                         'trial_response': trial_response})
     return df_random_walk
