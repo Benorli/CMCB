@@ -12,6 +12,7 @@ random distributions and analyze its effects.
 
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 
 # TODO: (jguzman) if param>3 use a dictionary
@@ -68,39 +69,23 @@ def where_first(x):
     return np.where(x)[0][0]
 
 
-def get_latencies(n_reps, n_samples, threshold):
+def plot_random_walk(df_random_walk, trials):
     """ 
-    Calculates the latencies (in number of samples) of crossing
-    threshodls of normaly distributed random variables with mean
-    zero and standard deviation 0.3.
+    Plots random walk model data
 
     Parameters
     ----------
-    n_reps : int
-        number of normal distributions generated
+    df_random_walk : pandas.core.frame.DataFrame
+        Each row is a trial. Columns must include; evidence,
+        trial_response, and trial_latency.
 
-    n_samples : int
-        the number of samples drawn from a normal distribution
+    trials : numpy.ndarray
+        An array containing trials to be included.
 
-    threshold : float
-        the value above which the latency will be calculated
-    
-    Returns
-    -------
-    A 1D NumPy array with the latency (in number of samples) of 
-    the crossing values. Note that the size of the array is n_reps.
     """
-    mysize = (n_reps, n_samples)
-    mynorm = np.random.normal(loc=0, scale=0.3, size=mysize)
-
-    rows, cols = np.where(mynorm>threshold) # returns rows, cols
-
-    # we simply take the columns up to the number of repetitions (n_reps)
-    # because these are the first instances where the repetition was
-    # above the threshold
-    mylatency = cols[:n_reps] # we take up to the number of reps
-
-    return mylatency
+    # TODO: recreate var space and try plotting
+    sns.set(style="darkgrid")
+    sns.lineplot(data=df_random_walk.evidence[trials])
 
 
 if __name__ == '__main__':
