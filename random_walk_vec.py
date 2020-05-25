@@ -51,10 +51,26 @@ def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
                               axis=1)
     evidence[:] = evidence.cumsum(axis=1)
 
-    trial_latency = np.apply_along_axis(func1d=where_first,
-                                        axis=1,
-                                        arr=np.abs(evidence) > threshold)
-    trial_response = np.sign(evidence[:, trial_latency])
+    # index where the threshold was crossed
+    trial_latency_top = np.apply_along_axis(func1d=where_first,
+                                            axis=1,
+                                            arr=evidence > threshold)
+    trial_latency_bot = np.apply_along_axis(func1d=where_first,
+                                            axis=1,
+                                            arr=evidence < -threshold)
+    # fix evidence to threshold once crossed
+    idx = np.arange(nreps)
+    evidence[idx > trial_latency_top.T] = threshold
+    evidence[idx < trial_latency_bot.T] = -threshold
+    # TODO: Check this section
+
+    # combine top and bottom latency
+    trial_latency = trial_latency_top
+    trial_latency[trial_latency_bot < trial_latency_top] = trial_latency_bot[trial_latency_bot < trial_latency_top]
+    trial_latency[trial_latency_top == -1] = trial_latency_bot[trial_latency_top == -1]
+    # TODO: take min then deal with zeroes
+    # TODO: when taking min, -1 is copied, need to deal with this
+    # TODO: array is modified inplace! be careful! Should copy
 
     df_random_walk = pd.DataFrame(data={'evidence': evidence,
                                         'trial_latency': trial_latency,
