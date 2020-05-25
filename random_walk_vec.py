@@ -43,7 +43,7 @@ def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
     A DataFrame containing three columns, evidence, trial_latency,
     and trial_response. Note that the length of columns is n_reps.
     """
-
+    # construct evidence accumulator for every trial
     evidence = np.concatenate((np.zeros((nreps, 1)),
                                np.random.normal(loc=drift,
                                                 scale=sd_rw,
@@ -80,7 +80,8 @@ def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
     return df_random_walk
 
     # TODO: Finish and plot intention for clarity
-    # TODO: numpy.put to replace values above threshold
+    # TODO: Replace values above threshold with ((start  <= r)) where r is np.arange and start is trial_latency
+    #       may have to sep positive and negative values. where True give +- 3 then asign with mask
 
 
 def where_first(x):
