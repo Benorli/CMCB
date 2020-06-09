@@ -64,19 +64,12 @@ def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
                                             axis=1,
                                             arr=evidence < -threshold)
     # fix evidence to threshold once crossed
-    idx = np.arange(nreps)
-    evidence[idx > trial_latency_top.T] = threshold
-    evidence[idx < trial_latency_bot.T] = -threshold
-    # TODO: Check this section
-
-    # combine top and bottom latency
-    trial_latency = trial_latency_top
-    trial_latency[trial_latency_bot < trial_latency_top] = trial_latency_bot[trial_latency_bot < trial_latency_top]
-    trial_latency[trial_latency_top == -1] = trial_latency_bot[trial_latency_top == -1]
-    # TODO: take min then deal with zeroes
-    # TODO: when taking min, -1 is copied, need to deal with this
-    # TODO: array is modified inplace! be careful! Should copy
-
+    evidence = fix_at_idx(arr=evidence,
+                          idx=trial_latency_top,
+                          fix=threshold)
+    evidence = fix_at_idx(arr=evidence,
+                          idx=trial_latency_bot,
+                          fix=-threshold)
     trial_response = np.sign(evidence[:, trial_latency])[:, 0]
 
     df_random_walk = pd.DataFrame(data={'evidence': list(evidence),
@@ -84,9 +77,41 @@ def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
                                         'trial_response': trial_response})
     return df_random_walk
 
-    # TODO: Finish and plot intention for clarity
-    # TODO: Replace values above threshold with ((start  <= r)) where r is np.arange and start is trial_latency
-    #       may have to sep positive and negative values. where True give +- 3 then asign with mask
+
+def fix_at_idx(arr, idx, fix, missing_idx=-1):
+    """ Fix all values of each row at and following an index (index given
+        per row).
+
+        Parameters
+        ----------
+        arr : numpy.ndarray
+            A 2d numpy array.
+
+        idx : numpy.ndarray
+            A 1d numpy array or a 2d single row/column numpy array. The
+            number of elements equal the number of rows in arr. Each
+            value is the index at which the value should be fixed, or an
+            indicator that the row should not be fixed.
+
+        fix : float
+            The value once fixed.
+
+        missing_idx : float
+            Indicator for rows which do not contain the idx.
+
+        Returns
+        -------
+        out : numpy.ndarray
+            An array size arr, with idx value and following values set
+            to fix.
+        """
+    idx.shape = (-1, 1)
+    ncols = arr.shape[1]
+    idx[idx == missing_idx] = ncols  # missing idx > max row_idx
+    row_idx = np.arange(ncols)
+    arr[row_idx >= idx] = fix
+    return arr
+
 
 
 def where_first(x):
