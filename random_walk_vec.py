@@ -53,8 +53,10 @@ def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
                                                 size=[nreps, nsamples])),
                               axis=1)
     evidence[:] = evidence.cumsum(axis=1)
-
     # index where the threshold was crossed
+    trial_latency = np.apply_along_axis(func1d=where_first,
+                                        axis=1,
+                                        arr=abs(evidence) > threshold)
     trial_latency_top = np.apply_along_axis(func1d=where_first,
                                             axis=1,
                                             arr=evidence > threshold)
