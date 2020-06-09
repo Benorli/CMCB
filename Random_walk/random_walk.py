@@ -45,29 +45,31 @@ def random_walk(nreps, nsamples, drift, sd_rw, threshold):
         length of columns is n_reps.
     """
     # construct evidence accumulator for every trial
-    evidence = np.concatenate((np.zeros((nreps, 1)),
-                               np.random.normal(loc=drift,
-                                                scale=sd_rw,
-                                                size=[nreps, nsamples])),
-                              axis=1)
-    evidence[:] = evidence.cumsum(axis=1)
 
-    evidence, trial_latency, trial_response = zip(*[random_walk_trial(evidence_row, threshold)
-                                                    for evidence_row
-                                                    in evidence])
+    start_zero_evidence = np.zeros((nreps, 1))
+    rand_norm_incr = np.random.normal(loc=drift,
+                                      scale=sd_rw,
+                                      size=[nreps, nsamples])
+    evidence_incr = np.concatenate((start_zero_evidence, rand_norm_incr),
+                                   axis=1)
+    acc_evidence = evidence_incr.cumsum(axis=1)
 
-    df_random_walk = pd.DataFrame(data={'evidence': evidence,
+    dv, trial_latency, trial_response = zip(*[random_walk_trial(acc_evidence_row, threshold)
+                                              for acc_evidence_row
+                                              in acc_evidence])
+
+    df_random_walk = pd.DataFrame(data={'decision_variable': dv,
                                         'trial_latency': trial_latency,
                                         'trial_response': trial_response})
     return df_random_walk
 
 
-def random_walk_trial(evidence_row, threshold):
+def random_walk_trial(acc_evidence_row, threshold):
     """ Single trial for a random walk model of decision making.
 
     Parameters
     ----------
-    evidence_row : numpy.ndarray
+    acc_evidence_row : numpy.ndarray
         A single row numpy array, containing a cumulative sum
         of random increments.
 
@@ -91,22 +93,22 @@ def random_walk_trial(evidence_row, threshold):
         no decision made.
     """
     try:
-        trial_latency = np.where(np.abs(evidence_row) >= threshold)[0][0]
+        trial_latency = np.where(np.abs(acc_evidence_row) >= threshold)[0][0]  # idx 1st crossing threshold
     except IndexError:
         trial_latency = -1
     if trial_latency == -1:
         trial_response = 0
     else:
-        trial_response = np.sign(evidence_row[trial_latency])
-        evidence_row[trial_latency:] = trial_response * threshold
-    return evidence_row, trial_latency, trial_response
+        trial_response = np.sign(acc_evidence_row[trial_latency])
+        acc_evidence_row[trial_latency:] = trial_response * threshold  # fix after crossing threshold
+    return acc_evidence_row, trial_latency, trial_response
 
 
 if __name__ == '__main__':
     import timeit as tt
     import cProfile as cP
 
-    print(tt.repeat("""df_rw = random_walk(nreps=2000,
+    print(tt.repeat("""df_rw = random_walk(nreps=20000,
                                            nsamples=2000,
                                            drift=0,
                                            sd_rw=0.3,
@@ -115,7 +117,7 @@ if __name__ == '__main__':
                     repeat=5,
                     number=1))
 
-    cP.run("""df_rw = random_walk(nreps=2000,
+    cP.run("""df_rw = random_walk(nreps=20000,
                                   nsamples=2000,
                                   drift=0,
                                   sd_rw=0.3,
