@@ -92,61 +92,21 @@ def where_first(x):
     return first_idx
 
 
-def plot_random_walk(df_random_walk, trials):
-    """ 
-    Plots random walk model data
-
-    Parameters
-    ----------
-    df_random_walk : pandas.core.frame.DataFrame
-        Each row is a trial. Columns must include; evidence,
-        trial_response, and trial_latency.
-
-    trials : numpy.ndarray
-        An array containing trials to be included.
-
-    """
-    # TODO: recreate var space and try plotting
-    sns.set(style="darkgrid")
-    sns.lineplot(data=df_random_walk.evidence[trials])
-
-
 if __name__ == '__main__':
-    # just for testing run the script with :
-    # python random_walk_vect.py
-    import matplotlib.pyplot as plt
-    #
-    # data = np.random.normal(loc = 0, scale = 0.3, size = (30, 5000))
-    # mylat = get_latencies(n_reps = 30, n_samples = 1000, threshold=0.2)
-    #
-    # fig, ax = plt.subplots(1, 2, figsize = (12, 8))
-    #
-    # for trace in data:
-    #     # get first the histograms
-    #     values, base = np.histogram(trace, bins=40)
-    #     # compute cumulative
-    #     mycum = np.cumsum(values)
-    #     ax[0].plot(base[:-1], mycum, c = 'gray', lw = 1)
-    #
-    # ax[0].set_ylabel('Cumulative distribution')
-    # ax[1].hist(mylat, bins = np.arange(0,200, 5))
-    # ax[1].set_ylabel('Number of ocurrences')
-    # ax[1].set_xlabel('Latency (in sampling points)')
-    #
-    #
-    # fig.show()
-    # set example params
-    n_reps = 1000
-    n_samples = 2000
-    drift = 0
-    sd_rw = 0.3  # standard deviation random walk
-    threshold = 3
+    import timeit as tt
+    import cProfile as cP
 
-    df_rw = random_walk_vec(n_reps,
-                            n_samples,
-                            drift,
-                            sd_rw,
-                            threshold)
-    plot_random_walk(df_rw, np.arange(5))
-    plt.show()
+    print(tt.repeat("""df_rw = random_walk_vec(nreps=2000,
+                                               nsamples=2000,
+                                               drift=0,
+                                               sd_rw=0.3,
+                                               threshold=3)""",
+                    setup='from __main__ import random_walk_vec',
+                    repeat=2,
+                    number=1))
 
+    cP.run("""df_rw = random_walk_vec(nreps=2000,
+                                      nsamples=2000,
+                                      drift=0,
+                                      sd_rw=0.3,
+                                      threshold=3)""")

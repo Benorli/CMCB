@@ -30,3 +30,25 @@ def simulate_trial(trial_evidence, nsamples, drift, sd_rw, threshold):
     assert trial_latency[0].size, "No decision made, sd_rw too low or threshold too high"
     trial_response = np.sign(trial_evidence[trial_latency])
     return trial_evidence, trial_latency[0][1], trial_response[0]
+
+
+if __name__ == '__main__':
+    """Testing space"""
+
+    import timeit as tt
+    import cProfile as cP
+
+    print(tt.repeat("""df_rw = random_walk(nreps=2000,
+                                           nsamples=2000,
+                                           drift=0,
+                                           sd_rw=0.3,
+                                           threshold=3)""",
+                    setup='from __main__ import random_walk',
+                    repeat=2,
+                    number=1))
+
+    cP.run("""df_rw = random_walk(nreps=2000,
+                                  nsamples=2000,
+                                  drift=0,
+                                  sd_rw=0.3,
+                                  threshold=3)""")
