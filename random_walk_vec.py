@@ -12,36 +12,39 @@ random distributions and analyze its effects.
 
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 
-# TODO: (jguzman) if param>3 use a dictionary
 def random_walk_vec(nreps, nsamples, drift, sd_rw, threshold):
-    """ vectorized random walk model with np
+    """ Vectorized random walk model with np. Explored focusing
+        on vectorisation afforded by numpy functions. Results
+        in the slowest method, likely due to the multiple usage
+        of apply_along_axis.
 
     Parameters
     ----------
     nreps : int
-        number of normal distributions generated
+        number of normal distributions generated.
 
     nsamples : int
-        the number of samples drawn from a normal distribution
+        the number of samples drawn from a normal distribution.
 
     drift : float
-        The initial evidence
+        The initial evidence.
 
     sd_rw : float
         The standard deviation of a random normal distribution
         which defines the step in evidence made at each time
-        point
+        point.
 
     threshold : float
         The value of evidence at which a decision is made.
     
     Returns
     -------
-    A DataFrame containing three columns, evidence, trial_latency,
-    and trial_response. Note that the length of columns is n_reps.
+    out : pandas.core.frame.DataFrame
+        A DataFrame containing three columns, evidence,
+        trial_latency, and trial_response. Note that the
+        length of columns is n_reps.
     """
     # construct evidence accumulator for every trial
     evidence = np.concatenate((np.zeros((nreps, 1)),
