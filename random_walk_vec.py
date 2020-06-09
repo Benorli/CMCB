@@ -113,10 +113,21 @@ def fix_at_idx(arr, idx, fix, missing_idx=-1):
     return arr
 
 
+def where_first(condition):
+    """ Return index of the first occurrence the condition is met or -1
 
-def where_first(x):
+        Parameters
+        ----------
+        condition: array_like, bool
+        Where True, return first index.
+
+        Returns
+        -------
+        out : int
+            Either first index where x or -1.
+    """
     try:
-        first_idx = np.where(x)[0][0]
+        first_idx = np.where(condition)[0][0]
     except IndexError:
         first_idx = -1
     return first_idx
