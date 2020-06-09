@@ -4,10 +4,12 @@ random_walk_vec.py
 Ben 
 Jose Guzman, jose.guzman<at>guzman-lab.com
 
-Created:Thu May  7 09:47:31 CEST 2020
+created: Tue May  5 13:46:35 2020
 
-This file contains functions to perform draw values from 
-random distributions and analyze its effects.
+This file contains functions to perform draw values from random
+distributions and analyze its effects. Explored focusing on
+vectorisation afforded by numpy functions. Results in the slowest
+method, likely due to the multiple usage of apply_along_axis.
 """
 
 import numpy as np

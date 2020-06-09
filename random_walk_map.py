@@ -1,12 +1,12 @@
 """
-random_walk_list_comp.py
+random_walk_map.py
 
 Ben
 
-Created:Mon Jun  7 15:54:01 CEST 2020
+created: Wed Jun  3 16:51:49 2020
 
 This file contains functions to perform a simple random
-walk model of decision making.
+walk model of decision making, using a map method.
 """
 
 import numpy as np
@@ -109,12 +109,6 @@ def random_walk_trial(evidence_row, threshold):
 if __name__ == '__main__':
     import timeit as tt
     import cProfile as cP
-
-    df_rw = random_walk_map(nreps=1000,
-                            nsamples=2000,
-                            drift=0,
-                            sd_rw=0.3,
-                            threshold=3)
 
     print(tt.repeat("""df_rw = random_walk_map(nreps=2000,
                                                nsamples=2000,
