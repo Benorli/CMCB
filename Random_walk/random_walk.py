@@ -110,20 +110,26 @@ def random_walk_trial(acc_evidence_row, threshold):
 
 
 if __name__ == '__main__':
-    import timeit as tt
-    import cProfile as cP
+    # import timeit as tt
+    # import cProfile as cP
 
-    print(tt.repeat("""df_rw = random_walk(nreps=20000,
-                                           nsamples=2000,
-                                           drift=0,
-                                           sd_rw=0.3,
-                                           threshold=3)""",
-                    setup='from __main__ import random_walk',
-                    repeat=5,
-                    number=1))
+    rw_df = random_walk(nreps=2000,
+                        nsamples=1000,
+                        drift=0,
+                        sd_rw=0.3,
+                        threshold=3)
 
-    cP.run("""df_rw = random_walk(nreps=20000,
-                                  nsamples=2000,
-                                  drift=0,
-                                  sd_rw=0.3,
-                                  threshold=3)""")
+    # print(tt.repeat("""df_rw = random_walk(nreps=20000,
+    #                                        nsamples=2000,
+    #                                        drift=0,
+    #                                        sd_rw=0.3,
+    #                                        threshold=3)""",
+    #                 setup='from __main__ import random_walk',
+    #                 repeat=5,
+    #                 number=1))
+    #
+    # cP.run("""df_rw = random_walk(nreps=20000,
+    #                               nsamples=2000,
+    #                               drift=0,
+    #                               sd_rw=0.3,
+    #                               threshold=3)""")
