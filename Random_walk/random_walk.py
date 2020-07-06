@@ -39,10 +39,12 @@ def random_walk(nreps, nsamples, drift, sd_rw, threshold):
 
     Returns
     -------
-    out : pandas.core.frame.DataFrame
-        A DataFrame containing three columns, evidence,
-        trial_latency, and trial_response. Note that the
-        length of columns is n_reps.
+    df_dv : pandas.core.frame.DataFrame
+        A DataFrame containing a column per trial, row per time point.
+        Data represents the decision variable (internal evidence).
+    df_trial_data : pandas.core.frame.DataFrame
+        A DataFrame containing two columns trial_latency and
+         trial_response. Note that the length of columns is n_reps.
     """
     # construct evidence accumulator for every trial
 
@@ -57,11 +59,14 @@ def random_walk(nreps, nsamples, drift, sd_rw, threshold):
     dv, trial_latency, trial_response = zip(*[random_walk_trial(acc_evidence_row, threshold)
                                               for acc_evidence_row
                                               in acc_evidence])
+    dv_array = np.asarray(dv).T
+    column_names = ["trial_" + str(trial_n) for trial_n in np.arange(nreps)]
 
-    df_random_walk = pd.DataFrame(data={'decision_variable': dv,
-                                        'trial_latency': trial_latency,
-                                        'trial_response': trial_response})
-    return df_random_walk
+    df_dv = pd.DataFrame(data=dv_array,
+                         columns=column_names)
+    df_trial_data = pd.DataFrame(data={'trial_latency': trial_latency,
+                                       'trial_response': trial_response})
+    return df_dv, df_trial_data
 
 
 def random_walk_trial(acc_evidence_row, threshold):
