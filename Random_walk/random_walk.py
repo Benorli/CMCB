@@ -14,54 +14,78 @@ readability.
 import numpy as np
 import pandas as pd
 
+import pandas as pd
 
-def random_walk(nreps, nsamples, drift, sd_rw, threshold):
-    """ Vectorized random walk model with np.
+
+def gen_drift(evidence, sd_rw, nreps, nsamples):
+    """Generate random drift, of a decision variable dependent on evidence
+
+     Parameters
+    ----------
+    evidence : float
+        The evidence given by the stimuli. The drift of the decision
+        variable is defined by increments drawn from a random normal
+        distribution with this mean value.
+
+    sd_rw : float
+        The drift of the decision variable is defined by increments
+        drawn from a random normal distribution with this standard
+        deviation.
+
+    nreps : int
+        The number of trials.
+
+    nsamples : int
+        The length of each trial.
+
+    Returns
+    -------
+    acc_drift : numpy.ndarray
+        A 2d numpy array representing the drift of the decision variable.
+        Each row is a trial and each column is a sample (time point).
+        """
+    start_zero_drift = np.zeros((nreps, 1))
+    rand_norm_incr = np.random.normal(loc=evidence,
+                                      scale=sd_rw,
+                                      size=[nreps, nsamples])
+    drift_incr = np.concatenate((start_zero_drift, rand_norm_incr),
+                                axis=1)
+    acc_drift = drift_incr.cumsum(axis=1)
+    return acc_drift
+
+
+def random_walk(nreps, threshold, acc_drift):
+    """Random walk model of decision making.
 
     Parameters
     ----------
     nreps : int
-        number of normal distributions generated.
-
-    nsamples : int
-        the number of samples drawn from a normal distribution.
-
-    drift : float
-        The initial evidence.
-
-    sd_rw : float
-        The standard deviation of a random normal distribution
-        which defines the step in evidence made at each time
-        point.
+        The number of trials.
 
     threshold : float
         The value of evidence at which a decision is made.
+
+    acc_drift : numpy.ndarray
+        A numpy array representing the drift of the decision variable.
 
     Returns
     -------
     df_dv : pandas.core.frame.DataFrame
         A DataFrame containing a column per trial, row per time point.
         Data represents the decision variable (internal evidence).
+
     df_trial_data : pandas.core.frame.DataFrame
         A DataFrame containing two columns trial_latency and
          trial_response. Note that the length of columns is n_reps.
+
     """
-    # construct evidence accumulator for every trial
+    # run the random walk function on every row of drift
+    dv, trial_latency, trial_response = zip(*[random_walk_trial(acc_drift_row, threshold)
+                                              for acc_drift_row
+                                              in acc_drift])
 
-    start_zero_evidence = np.zeros((nreps, 1))
-    rand_norm_incr = np.random.normal(loc=drift,
-                                      scale=sd_rw,
-                                      size=[nreps, nsamples])
-    evidence_incr = np.concatenate((start_zero_evidence, rand_norm_incr),
-                                   axis=1)
-    acc_evidence = evidence_incr.cumsum(axis=1)
-
-    dv, trial_latency, trial_response = zip(*[random_walk_trial(acc_evidence_row, threshold)
-                                              for acc_evidence_row
-                                              in acc_evidence])
+    column_names = ["trial_" + str(trial_n + 1) for trial_n in np.arange(nreps)]
     dv_array = np.asarray(dv).T
-    column_names = ["trial_" + str(trial_n) for trial_n in np.arange(nreps)]
-
     df_dv = pd.DataFrame(data=dv_array,
                          columns=column_names)
     df_trial_data = pd.DataFrame(data={'trial_latency': trial_latency,
@@ -69,44 +93,46 @@ def random_walk(nreps, nsamples, drift, sd_rw, threshold):
     return df_dv, df_trial_data
 
 
-def random_walk_trial(acc_evidence_row, threshold):
+def random_walk_trial(acc_drift_row, threshold):
     """ Single trial for a random walk model of decision making.
 
     Parameters
     ----------
-    acc_evidence_row : numpy.ndarray
-        A single row numpy array, containing a cumulative sum
-        of random increments.
+    acc_drift_row : numpy.ndarray
+        A single row numpy array, containing a cumulative sum of random
+        increments.
 
     threshold : float
         The value of evidence at which a decision is made.
 
     Returns
     -------
-    evidence_row : numpy.ndarray
-        A single row numpy array, containing a cumulative sum
-        of random increments. Once a value reaches the threshold
-        all following values are fixed.
+    acc_drift_row : numpy.ndarray
+        A single row numpy array, containing a cumulative sum of random
+        increments. Once a value reaches the threshold the trial is over
+        and following values are set to NaN.
 
     trial_latency : int
-        The index which a decision is made (the evidence
-        crosses a threshold). -1 if no decision is made.
+        The index which a decision is made (the evidence crosses a
+        threshold). -1 if no decision is made.
 
     trial_response : int
-        + 1 for decision made for upper threshold, -1
-        when decision made for negative threshold, 0 for
-        no decision made.
+        + 1 for decision made for upper threshold, -1 when decision made
+        for negative threshold, 0 for no decision made.
     """
     try:
-        trial_latency = np.where(np.abs(acc_evidence_row) >= threshold)[0][0]  # idx 1st crossing threshold
+        # look for the first index when the threshold is crossed
+        trial_latency = np.where(np.abs(acc_drift_row) >= threshold)[0][0]
+    # if the index is never crossed
     except IndexError:
-        trial_latency = -1
+        trial_latency = -1  # no latency
     if trial_latency == -1:
-        trial_response = 0
+        trial_response = 0  # no response
     else:
-        trial_response = np.sign(acc_evidence_row[trial_latency])
-        acc_evidence_row[trial_latency:] = trial_response * threshold  # fix after crossing threshold
-    return acc_evidence_row, trial_latency, trial_response
+        trial_response = np.sign(acc_drift_row[trial_latency])
+        # After the decision is made the trial ends
+        acc_drift_row[trial_latency + 1:] = np.NaN
+    return acc_drift_row, trial_latency, trial_response
 
 
 if __name__ == '__main__':
