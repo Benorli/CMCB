@@ -14,8 +14,6 @@ readability.
 import numpy as np
 import pandas as pd
 
-import pandas as pd
-
 
 def gen_drift(evidence, sd_rw, nreps, nsamples):
     """Generate random drift, of a decision variable dependent on evidence
