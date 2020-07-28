@@ -16,7 +16,8 @@ import pandas as pd
 
 
 def gen_drift(evidence, sd_rw, nreps, nsamples):
-    """Generate random drift, of a decision variable dependent on evidence
+    """
+    Generate random drift, of a decision variable dependent on evidence
 
      Parameters
     ----------
@@ -52,8 +53,62 @@ def gen_drift(evidence, sd_rw, nreps, nsamples):
     return acc_drift
 
 
+def gen_drift_with_noise(evidence, sd_rw, nreps, nsamples, start_noise, evidence_noise):
+    """
+    Generate random drift, of a decision variable dependent on evidence.
+    Includes noise to the starting evidence and the standard deviation of the
+    drift
+
+
+     Parameters
+    ----------
+    evidence : float
+        The evidence given by the stimuli. The drift of the decision
+        variable is defined by increments drawn from a random normal
+        distribution with this mean value.
+
+    sd_rw : float
+        The drift of the decision variable is defined by increments
+        drawn from a random normal distribution with this standard
+        deviation.
+
+    nreps : int
+        The number of trials.
+
+    nsamples : int
+        The length of each trial.
+
+    start_noise : int
+        The standard deviation of the noise on the starting point of the
+        decision variable.
+
+    evidence_noise : int
+
+    Returns
+    -------
+    acc_drift : numpy.ndarray
+        A 2d numpy array representing the drift of the decision variable.
+        Each row is a trial and each column is a sample (time point).
+        """
+    trial_start = np.random.normal(loc=0,
+                                   scale=start_noise,
+                                   size=[nreps, 1])
+    sd_noise = np.random.normal(loc=0,
+                                scale=evidence_noise,
+                                size=[nreps, nsamples])
+    noisey_sd = sd_noise + sd_rw
+    rand_norm_incr = np.random.normal(loc=evidence,
+                                      scale=noisey_sd,
+                                      size=[nreps, nsamples])
+    drift_incr = np.concatenate((trial_start, rand_norm_incr),
+                                axis=1)
+    acc_drift = drift_incr.cumsum(axis=1)
+    return acc_drift
+
+
 def random_walk(nreps, threshold, acc_drift):
-    """Random walk model of decision making.
+    """
+    Random walk model of decision making.
 
     Parameters
     ----------
@@ -92,7 +147,8 @@ def random_walk(nreps, threshold, acc_drift):
 
 
 def random_walk_trial(acc_drift_row, threshold):
-    """ Single trial for a random walk model of decision making.
+    """
+    Single trial for a random walk model of decision making.
 
     Parameters
     ----------
