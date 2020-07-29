@@ -93,12 +93,11 @@ def gen_drift_with_noise(evidence, sd_rw, nreps, nsamples, start_noise, evidence
     trial_start = np.random.normal(loc=0,
                                    scale=start_noise,
                                    size=[nreps, 1])
-    sd_noise = np.random.normal(loc=0,
+    drift_sd = np.random.normal(loc=sd_rw,
                                 scale=evidence_noise,
                                 size=[nreps, nsamples])
-    noisey_sd = sd_noise + sd_rw
     rand_norm_incr = np.random.normal(loc=evidence,
-                                      scale=noisey_sd,
+                                      scale=drift_sd,
                                       size=[nreps, nsamples])
     drift_incr = np.concatenate((trial_start, rand_norm_incr),
                                 axis=1)
