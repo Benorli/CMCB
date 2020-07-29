@@ -21,3 +21,8 @@ Online ISBN: 9781316272503
 DOI: https://doi.org/10.1017/CBO9781316272503
 
 The original r code can be found here: https://github.com/psy-farrell/computational-modelling
+
+
+
+Jupyter theme:
+jt -t onedork -fs 95 -altp -tfs 11 -nfs 115 -cellw 88% -T -nf loraserif -tf loraserif
