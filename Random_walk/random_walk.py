@@ -191,13 +191,8 @@ def random_walk_trial(acc_drift_row, threshold):
 if __name__ == '__main__':
     # import timeit as tt
     # import cProfile as cP
-
-    rw_df = random_walk(nreps=2000,
-                        nsamples=1000,
-                        drift=0,
-                        sd_rw=0.3,
-                        threshold=3)
-
+    print('test not set')
+    #
     # print(tt.repeat("""df_rw = random_walk(nreps=20000,
     #                                        nsamples=2000,
     #                                        drift=0,
