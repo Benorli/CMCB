@@ -4,4 +4,4 @@ numpy==1.22.0
 matplotlib==3.3.1
 jupyterthemes==0.20.0
 notebook==6.4.12
-scikit-learn==0.23.2
+scikit-learn==1.0.1
